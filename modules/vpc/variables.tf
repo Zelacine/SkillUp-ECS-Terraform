@@ -28,8 +28,7 @@ variable "private_subnet_tags" {
 
 variable "allowed_ports" {
   description = "List of TCP ports to allow from the internet"
-  type        = list(number)      + name                                                         = "my-flask-app"
-
+  type        = list(number)
   default     = [80, 443, 8000] # HTTP + HTTPS by default
 }
 

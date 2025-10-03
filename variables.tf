@@ -45,13 +45,13 @@ variable "private_subnet_tags" {
 variable "domain_name" {
   description = "The root domain name"
   type        = string
-  default     = "d888k.xyz"
+  default     = "example.com"
 }
 
 variable "subdomain" {
   description = "The subdomain (FQDN) for the application"
   type        = string
-  default     = "www.d888k.xyz"
+  default     = "www.example.com"
 }
 
 variable "subject_alternative_names" {
