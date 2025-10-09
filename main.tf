@@ -21,9 +21,22 @@ module "vpc" {
   private_subnet_tags = var.private_subnet_tags
 }
 
+resource "aws_route53_zone" "main" {
+  name = var.domain_name
+  
+  tags = {
+    Environment = "production"
+    Name        = var.domain_name
+  }
+    lifecycle {
+    prevent_destroy = true  # Prevent accidental deletion
+  }
+}
+
 data "aws_route53_zone" "main" {
   name         = var.domain_name
   private_zone = false
+  depends_on   = [aws_route53_zone.main]  # Add this dependency
 }
 
 
@@ -32,7 +45,7 @@ module "cert" {
   source = "./modules/cert"
   domain_name               = var.domain_name
   subject_alternative_names = var.subject_alternative_names
-  zone_id                   = data.aws_route53_zone.main.zone_id
+  zone_id                   = data.aws_route53_zone.main.id
  
 }
 
@@ -46,9 +59,10 @@ module "elb" {
   public_subnets     = module.vpc.public_subnets
   vpc_id             = module.vpc.vpc_id
   security_groups    = [module.vpc.public_sg_id]
-  #route53_zone_id   = data.aws_route53_zone.skillup_d888k_xyz.zone_id
-  route53_zone_id    = data.aws_route53_zone.main.zone_id
+  #route53_zone_id    = data.aws_route53_zone.main.zone_id
+  route53_zone_id    = aws_route53_zone.main.id 
   certificate_arn    = module.cert.certificate_arn
+  depends_on      = [module.cert]
  
 }
 

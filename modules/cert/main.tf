@@ -6,7 +6,7 @@ resource "aws_acm_certificate" "app" {
 }
 
 # Create validation records
-resource "aws_route53_record" "validation" {
+resource "aws_route53_record" "cert_validation" {
   for_each = {
     for dvo in aws_acm_certificate.app.domain_validation_options :
     dvo.domain_name => {
@@ -26,5 +26,6 @@ resource "aws_route53_record" "validation" {
 # Validate cert
 resource "aws_acm_certificate_validation" "app" {
   certificate_arn         = aws_acm_certificate.app.arn
-  validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
+  #validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
