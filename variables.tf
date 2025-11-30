@@ -10,7 +10,7 @@ variable "region" {
 variable "project_name" {
   type        = string
   description = "Name of the example project."
-  default = "SkillUp-terraform"
+  default     = "SkillUp-terraform"
 }
 
 variable "vpc_cidr" {
